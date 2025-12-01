@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;          // if using TextMeshPro
+
 
 public class GameManager : MonoBehaviour
 {
@@ -15,8 +17,10 @@ public class GameManager : MonoBehaviour
     public GameObject bossPrefab;
     public int killsToSpawnBoss = 20;
 
+
     [Header("UI")]
     public GameObject winScreen;
+    public TextMeshProUGUI killCounterText;
 
     int enemiesKilled;
     bool bossSpawned;
@@ -33,8 +37,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (winScreen != null)
         winScreen.SetActive(false);
+
         SpawnInitialEnemies();
+        UpdateKillUI();   // show 0 / 20 at start
     }
 
     void SpawnInitialEnemies()
@@ -51,6 +58,7 @@ public class GameManager : MonoBehaviour
     public void OnEnemyKilled()
     {
         enemiesKilled++;
+        UpdateKillUI();
 
         if (!bossSpawned && enemiesKilled >= killsToSpawnBoss)
         {
@@ -58,6 +66,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void UpdateKillUI()
+    {
+        if (killCounterText != null)
+        {
+            killCounterText.text = $"Kills: {enemiesKilled} / {killsToSpawnBoss}";
+        }
+    }
     void SpawnBoss()
     {
         bossSpawned = true;
