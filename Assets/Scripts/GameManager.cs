@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
     public GameObject winScreen;
     public TextMeshProUGUI killCounterText;
 
+    [Header("Game Over")]
+    public GameObject gameOverScreen;        // your GAME OVER panel
+    public MonoBehaviour playerController;   // your movement/look script
+
     int enemiesKilled;
     bool bossSpawned;
 
@@ -91,5 +95,22 @@ public class GameManager : MonoBehaviour
         winScreen.SetActive(true);
         // You can pause time here if you want:
         // Time.timeScale = 0f;
+    }
+    public void OnPlayerDied()
+    {
+        // Show Game Over UI
+        if (gameOverScreen != null)
+            gameOverScreen.SetActive(true);
+
+        // Disable player movement / look
+        if (playerController != null)
+            playerController.enabled = false;
+
+        // Unlock cursor so you can click buttons
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        // Optional: pause game world
+        Time.timeScale = 0f;
     }
 }

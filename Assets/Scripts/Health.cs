@@ -5,7 +5,9 @@ public class Health : MonoBehaviour
 {
     public int maxHealth = 3;
     public ParticleSystem deathEffect;
-  
+    public bool destroyOnDeath = true;   // NEW – can be turned off for player
+    public bool isPlayer = false;      // tick this on the player
+
 
     public event Action OnDeath;
 
@@ -31,13 +33,23 @@ public class Health : MonoBehaviour
 
     void Die()
     {
-        if (deathEffect != null)
+        if (isPlayer)
         {
-            Instantiate(deathEffect, transform.position, Quaternion.identity);
+            // Tell GameManager the player died
+            GameManager.Instance.OnPlayerDied();
         }
+        else
+        {
+            // Normal enemy death
+            if (deathEffect != null)
+            {
+                Instantiate(deathEffect, transform.position, Quaternion.identity);
+            }
 
-        OnDeath?.Invoke();
-        Destroy(gameObject);
+            GameManager.Instance.OnEnemyKilled(); // if you use this
+            if (destroyOnDeath)
+                Destroy(gameObject);
+        }
     }
 }
 
